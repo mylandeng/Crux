@@ -18,10 +18,16 @@ Curx 现在包含一个 FastAPI 应用骨架和一个知识库工作台原型页
 Copy-Item .env.example .env
 docker compose up -d
 $env:PYTHONPATH = "src"
-uv run uvicorn curx.main:app --reload
+uv run uvicorn curx.main:app --reload --port 8100
 ```
 
-打开 http://127.0.0.1:8000 查看页面。
+打开 http://127.0.0.1:8100 查看页面。
+
+如需手动激活本地虚拟环境：
+
+```powershell
+.\.venv\Scripts\activate
+```
 
 ## 验证
 

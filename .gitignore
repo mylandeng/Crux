@@ -17,6 +17,7 @@ env/
 # Build and package output
 build/
 dist/
+wheels/
 *.egg-info/
 
 # Local configuration and secrets
@@ -49,3 +50,13 @@ node_modules/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Local third-party checkouts
+third_party/
+
+# Local AI assistant runtime state
+.claude/
+.codex/
+.meta-kim/
+.meta-kim.disabled/
+graphify-out/

@@ -1,6 +1,8 @@
 [project]
 name = "curx"
 version = "0.1.0"
+description = "The core of your own matter"
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.18.5",
