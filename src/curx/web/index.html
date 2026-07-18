@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Curx 知识库</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="icon-button" aria-label="打开导航">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <a class="brand" href="/" aria-label="Curx 首页">
+          <span class="brand-mark" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </span>
+          <span>
+            <strong>Curx</strong>
+            <small>证据知识库</small>
+          </span>
+        </a>
+        <label class="global-search">
+          <span aria-hidden="true">⌕</span>
+          <input type="search" placeholder="搜索文档、问题或标签" />
+          <kbd>⌘ K</kbd>
+        </label>
+        <button class="upload-button" type="button">
+          <span aria-hidden="true">⇧</span>
+          上传文档
+        </button>
+        <button class="icon-button bell" aria-label="通知">·</button>
+        <button class="profile-button" type="button">
+          <span class="avatar">张</span>
+          <span id="current-user">张明</span>
+          <span aria-hidden="true">⌄</span>
+        </button>
+      </header>
+
+      <main class="workspace">
+        <aside class="left-panel" aria-label="知识空间和会话">
+          <section class="panel-section">
+            <div class="section-heading">
+              <h2>我的知识空间</h2>
+              <button class="mini-button" type="button">新建</button>
+            </div>
+            <div id="space-list" class="space-list"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <h2>最近会话</h2>
+              <button class="link-button" type="button">查看全部</button>
+            </div>
+            <div id="recent-list" class="thread-list"></div>
+          </section>
+
+          <section class="panel-section">
+            <div class="section-heading">
+              <h2>收藏问题</h2>
+              <button class="link-button" type="button">查看全部</button>
+            </div>
+            <div id="saved-list" class="thread-list compact"></div>
+          </section>
+        </aside>
+
+        <section class="center-panel" aria-label="问答工作区">
+          <div class="hero-panel">
+            <p class="hello">你好，<span id="hero-user">张明</span></p>
+            <h1>今天想查什么？</h1>
+            <form id="ask-form" class="ask-box">
+              <textarea id="question-input" rows="3" placeholder="请输入你的问题，例如：电池充电截止电压是多少？"></textarea>
+              <div class="ask-tools">
+                <button class="text-tool" type="button">附件</button>
+                <button class="mode-select" type="button">深度思考 <span aria-hidden="true">⌄</span></button>
+                <button class="send-button" type="submit" aria-label="发送问题">➜</button>
+              </div>
+            </form>
+            <div class="quick-actions" aria-label="快捷操作">
+              <button type="button">总结文档</button>
+              <button type="button">查找参数</button>
+              <button type="button">解释术语</button>
+              <button type="button">生成步骤</button>
+            </div>
+          </div>
+
+          <section class="answer-card" aria-live="polite">
+            <div class="card-title-row">
+              <div>
+                <p class="eyebrow">AI 回答</p>
+                <h2 id="answer-title">电池充电截止电压是多少？</h2>
+              </div>
+              <span id="confidence-pill" class="status-pill high">高可信</span>
+            </div>
+            <ol id="event-steps" class="event-steps"></ol>
+            <article class="answer-body">
+              <h3>结论</h3>
+              <p id="answer-text">正在加载知识空间快照，请稍候。</p>
+              <h3>依据</h3>
+              <ol id="citation-list" class="citation-list"></ol>
+              <h3>建议下一步</h3>
+              <div id="next-actions" class="next-actions"></div>
+            </article>
+            <footer class="answer-footer">
+              <span>回答由 AI 生成，内容基于知识库资料。</span>
+              <div class="vote-buttons" aria-label="反馈">
+                <button type="button">有帮助</button>
+                <button type="button">需核对</button>
+              </div>
+            </footer>
+          </section>
+        </section>
+
+        <aside class="right-panel" aria-label="引用来源">
+          <section class="source-health">
+            <div>
+              <p class="eyebrow">知识库健康度</p>
+              <strong id="health-value">86%</strong>
+            </div>
+            <div>
+              <p class="eyebrow">已索引</p>
+              <strong id="indexed-value">128</strong>
+            </div>
+            <div>
+              <p class="eyebrow">最近更新</p>
+              <strong>今天 14:32</strong>
+            </div>
+          </section>
+          <section class="panel-card">
+            <div class="section-heading">
+              <h2>引用来源</h2>
+              <button class="link-button" type="button">查看更多</button>
+            </div>
+            <div id="source-list" class="source-list"></div>
+          </section>
+          <section id="source-detail" class="panel-card detail-card">
+            <p class="eyebrow">引用详情</p>
+            <h2>选择一条引用</h2>
+            <p>查看来源位置、引用内容和证据解读。</p>
+          </section>
+        </aside>
+      </main>
+    </div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
