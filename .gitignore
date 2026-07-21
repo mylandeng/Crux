@@ -56,7 +56,9 @@ third_party/
 
 # Local AI assistant runtime state
 .claude/
-.codex/
+.codex/*
+!.codex/skills/
+!.codex/skills/**
 .meta-kim/
 .meta-kim.disabled/
 graphify-out/

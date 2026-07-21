@@ -10,317 +10,298 @@
     <div class="app-shell">
       <header class="topbar">
         <a class="brand" href="/" aria-label="Curx 首页">
-          <span class="brand-mark" aria-hidden="true">
-            <i></i><i></i><i></i><i></i>
-          </span>
+          <span class="brand-mark" aria-hidden="true">C</span>
           <span>
             <strong>Curx</strong>
             <small>证据知识库</small>
           </span>
         </a>
-        <label class="global-search">
-          <span aria-hidden="true">⌕</span>
-          <input id="global-search" type="search" placeholder="搜索文档、问题或术语" />
-          <kbd>⌘ K</kbd>
-        </label>
-        <button id="upload-entry" class="primary-button" type="button">⇧ 上传文档</button>
-        <button class="avatar-button" type="button" aria-label="个人中心">张</button>
+
+        <div class="topbar-context" aria-label="当前知识空间">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span><small>当前空间</small><strong id="top-space-name">产品问答</strong></span>
+        </div>
+
+        <div class="topbar-actions">
+          <button id="search-trigger" class="icon-button" type="button" aria-label="搜索">
+            <span class="search-icon" aria-hidden="true"></span>
+          </button>
+          <button class="avatar-button" type="button" aria-label="个人中心">张</button>
+        </div>
       </header>
 
       <div class="app-body">
         <aside class="side-nav" aria-label="功能导航">
           <nav class="nav-stack" aria-label="主导航">
-            <button class="nav-item active" type="button" data-view="home">
-              <span class="ico">□</span>
-              <span>首页<br /><small>知识空间入口</small></span>
+            <button class="nav-item active" type="button" data-view="home" data-section="home">
+              <span class="nav-glyph" aria-hidden="true">AI</span>
+              <span><strong>AI 问一问</strong><small>基于资料回答</small></span>
             </button>
-            <button class="nav-item" type="button" data-view="space">
-              <span class="ico">▣</span>
-              <span>知识空间<br /><small>产品问答</small></span>
+            <button class="nav-item" type="button" data-view="space" data-section="space">
+              <span class="nav-glyph" aria-hidden="true">KB</span>
+              <span><strong>知识空间</strong><small>文档与索引</small></span>
             </button>
-            <button class="nav-item" type="button" data-view="upload">
-              <span class="ico">⇧</span>
-              <span>上传解析<br /><small>解析并入库</small></span>
-            </button>
-            <button class="nav-item" type="button" data-view="answer">
-              <span class="ico">✦</span>
-              <span>AI 回答<br /><small>结论与依据</small></span>
-            </button>
-            <button class="nav-item" type="button" data-view="preview">
-              <span class="ico">▤</span>
-              <span>原文预览<br /><small>打开上下文</small></span>
-            </button>
-            <button class="nav-item" type="button" data-view="settings">
-              <span class="ico">⚙</span>
-              <span>管理设置<br /><small>权限与索引</small></span>
+            <button class="nav-item" type="button" data-view="settings" data-section="settings">
+              <span class="nav-glyph" aria-hidden="true">SET</span>
+              <span><strong>管理设置</strong><small>权限与安全</small></span>
             </button>
           </nav>
 
-          <section class="side-section">
-            <div class="side-title">最近会话 <button class="link-button" type="button" data-view="answer">全部</button></div>
-            <button class="history active" type="button" data-question="电池充电截止电压是多少？">电池充电截止电压是多少？</button>
-            <button class="history" type="button" data-question="设备休眠功耗优化方案">设备休眠功耗优化方案</button>
-            <button class="history" type="button" data-question="Bootloader 升级流程">Bootloader 升级流程</button>
-          </section>
+          <div class="side-status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span><strong>索引正常</strong><small>最近更新 14:32</small></span>
+          </div>
         </aside>
 
         <main class="view-host">
-          <div class="flow-tabs" aria-label="UX 流程">
-            <button class="flow-tab active" type="button" data-view="home"><span>1</span>知识空间首页</button>
-            <button class="flow-tab" type="button" data-view="space"><span>2</span>产品问答</button>
-            <button class="flow-tab" type="button" data-view="upload"><span>3</span>上传解析</button>
-            <button class="flow-tab" type="button" data-view="answer"><span>4</span>AI 回答</button>
-            <button class="flow-tab" type="button" data-view="preview"><span>5</span>原文上下文</button>
-            <button class="flow-tab" type="button" data-view="settings"><span>6</span>管理设置</button>
-          </div>
+          <section id="view-home" class="view active" aria-label="AI 问一问">
+            <div class="home-stage">
+              <div class="home-layout">
+                <div class="home-primary">
+                  <header class="home-heading">
+                    <p class="eyebrow">AI 问一问</p>
+                    <h1>从可信资料里找到答案</h1>
+                    <p>当前检索“<strong id="home-space-name">产品问答</strong>”中的 <span id="home-doc-count">128</span> 份已索引资料。</p>
+                  </header>
 
-          <section id="view-home" class="view active" aria-label="知识空间首页">
-            <div class="screen-grid">
-              <div class="main-col">
-                <div class="hero-panel">
-                  <p class="hello">你好，张明</p>
-                  <h1>今天想<b>查什么？</b></h1>
-                  <form id="ask-form" class="ask-box">
-                    <textarea id="question-input" rows="3" placeholder="请输入你的问题，例如：电池充电截止电压是多少？"></textarea>
+                  <form id="ask-form" class="ask-box home-ask">
+                    <label class="sr-only" for="question-input">输入问题</label>
+                    <textarea
+                      id="question-input"
+                      rows="7"
+                      placeholder="输入一个具体问题，例如：电池充电截止电压是多少？"
+                    ></textarea>
                     <div class="ask-tools">
-                      <button class="ghost-button" type="button">附件</button>
-                      <button class="ghost-button" type="button">深度思考 ⌄</button>
-                      <button class="send-button" type="submit" aria-label="发送问题">↗</button>
+                      <div class="ask-scope">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span>仅检索当前知识空间</span>
+                      </div>
+                      <button class="send-button" type="submit">
+                        <span class="bulb-icon" aria-hidden="true"></span><span>开始检索</span>
+                      </button>
                     </div>
                   </form>
-                  <div class="chips" aria-label="快捷操作">
-                    <button type="button" data-question="总结产品问答空间最近的文档">▤ 总结文档</button>
-                    <button type="button" data-question="查找电池充电截止电压参数">⌕ 查找参数</button>
-                    <button type="button" data-question="解释 V_CV 与截止电流">Aa 解释术语</button>
-                    <button type="button" data-question="生成充电异常排查步骤">☷ 生成步骤</button>
-                  </div>
                 </div>
-                <section class="panel">
-                  <div class="section-heading">
-                    <h2>我可访问的知识空间</h2>
-                    <button class="link-button" type="button" data-view="space">进入产品问答</button>
+
+                <section class="recent-questions" aria-labelledby="recent-title">
+                  <div class="section-heading quiet-heading history-heading">
+                    <div>
+                      <h2 id="recent-title">历史对话</h2>
+                      <span id="history-count">最近 5 条</span>
+                    </div>
+                    <button
+                      id="history-toggle"
+                      class="history-toggle"
+                      type="button"
+                      aria-controls="recent-list"
+                      aria-expanded="false"
+                      hidden
+                    >展开全部</button>
                   </div>
-                  <div class="space-grid">
-                    <button class="space-card" type="button" data-view="space"><span class="ico">□</span><b>产品问答</b><small>常见问题与解答</small></button>
-                    <button class="space-card" type="button" data-view="space"><span class="ico">▣</span><b>固件助手</b><small>相关知识与说明</small></button>
-                    <button class="space-card" type="button" data-view="space"><span class="ico">▤</span><b>操作手册</b><small>指南与步骤</small></button>
-                  </div>
+                  <div id="recent-list" class="recent-list" aria-live="polite"></div>
                 </section>
               </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>本次推荐能力</h3>
-                  <button class="mini-line" type="button" data-question="精准检索电池充电参数">🔎 精准检索</button>
-                  <button class="mini-line" type="button" data-view="preview">✦ 引用溯源</button>
-                  <button class="mini-line" type="button" data-question="生成充电异常排查步骤">☷ 生成步骤</button>
-                </section>
-                <section class="right-card">
-                  <h3>常见问题</h3>
-                  <button class="mini-line" type="button" data-question="如何查看固件版本？">如何查看固件版本？</button>
-                  <button class="mini-line" type="button" data-question="OTA 失败如何处理？">OTA 失败如何处理？</button>
-                  <button class="mini-line" type="button" data-question="如何导出设备日志？">如何导出设备日志？</button>
-                </section>
-              </aside>
             </div>
           </section>
 
-          <section id="view-space" class="view" aria-label="产品问答空间">
-            <div class="screen-grid">
-              <div class="main-col">
-                <div class="toolbar-card">
-                  <div class="breadcrumb">产品问答 / 空间首页</div>
-                  <button class="primary-button" type="button" data-view="upload">+ 上传文档</button>
+          <section id="view-space" class="view" aria-label="知识空间">
+            <div class="page-frame">
+              <header class="page-header">
+                <div>
+                  <p class="eyebrow">知识空间</p>
+                  <h1>产品问答</h1>
+                  <p>维护可检索资料，查看索引状态与来源质量。</p>
                 </div>
-                <div class="metric-row">
-                  <article class="metric-card"><span>健康度</span><b>86%</b></article>
-                  <article class="metric-card"><span>已索引</span><b>128</b></article>
-                  <article class="metric-card"><span>更新</span><b>14:32</b></article>
+                <button class="primary-button" type="button" data-view="upload">上传文档</button>
+              </header>
+
+              <div class="metric-strip" aria-label="知识空间状态">
+                <div><span>索引健康度</span><strong id="space-health">86%</strong><small>运行正常</small></div>
+                <div><span>已索引文档</span><strong id="space-doc-count">128</strong><small>3 类来源</small></div>
+                <div><span>失败任务</span><strong>0</strong><small>过去 7 天</small></div>
+                <div><span>最近更新</span><strong>14:32</strong><small>今天</small></div>
+              </div>
+
+              <section class="content-section">
+                <div class="section-heading">
+                  <div><h2>资料库</h2><p>打开文档可查看原文和索引位置。</p></div>
+                  <button class="text-button" type="button" data-view="upload">查看解析任务</button>
                 </div>
-                <section class="panel">
-                  <div class="section-heading">
-                    <h2>高相关资料</h2>
-                    <button class="link-button" type="button" data-view="preview">打开原文</button>
-                  </div>
-                  <article class="content-card">
-                    <div><b>产品说明书 v2.3.pdf</b><span class="tag">高相关</span></div>
-                    <p>第 45 页 · 充电规格与关键电气参数</p>
+                <div id="document-list" class="document-list">
+                  <button class="document-row" type="button" data-preview-from="space">
+                    <span class="file-type">PDF</span>
+                    <span><strong>产品规格书 v2.3.1</strong><small>第 12 页 · 电池与充电规格</small></span>
+                    <span class="document-meta"><span class="state-label success">已索引</span><small>今天 14:32</small></span>
+                    <span class="row-arrow" aria-hidden="true">→</span>
+                  </button>
+                  <button class="document-row" type="button" data-preview-from="space">
+                    <span class="file-type">PDF</span>
+                    <span><strong>电池充电管理设计指南</strong><small>第 23 页 · 充电流程说明</small></span>
+                    <span class="document-meta"><span class="state-label success">已索引</span><small>昨天 18:05</small></span>
+                    <span class="row-arrow" aria-hidden="true">→</span>
+                  </button>
+                  <button class="document-row" type="button" data-preview-from="space">
+                    <span class="file-type">PDF</span>
+                    <span><strong>固件设计说明 v1.8.0</strong><small>第 78 页 · 充电控制逻辑</small></span>
+                    <span class="document-meta"><span class="state-label success">已索引</span><small>07-18 09:40</small></span>
+                    <span class="row-arrow" aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </section>
+            </div>
+          </section>
+
+          <section id="view-upload" class="view" aria-label="上传与解析">
+            <div class="page-frame narrow-frame">
+              <header class="subpage-header">
+                <button class="back-button" type="button" data-view="space">
+                  <span class="back-icon" aria-hidden="true"></span><span>返回知识空间</span>
+                </button>
+                <div><p class="eyebrow">知识空间 / 上传</p><h1>上传与解析</h1></div>
+                <button id="start-parse" class="primary-button" type="button">开始解析</button>
+              </header>
+
+              <div id="upload-zone" class="upload-zone" tabindex="0" role="button" aria-label="选择或拖入文件">
+                <span class="upload-mark" aria-hidden="true">↑</span>
+                <strong>选择文件或拖到这里</strong>
+                <p>支持 PDF、Word 和表格，上传后进入解析与索引队列。</p>
+              </div>
+
+              <section class="content-section">
+                <div class="section-heading"><div><h2>解析队列</h2><p>查看文档进入知识空间前的处理状态。</p></div></div>
+                <div class="task-list">
+                  <article class="task-row">
+                    <span class="file-type">PDF</span>
+                    <span><strong>产品说明书 v2.4.pdf</strong><small id="parse-status">正在提取文本并建立结构</small></span>
+                    <div class="progress" aria-label="解析进度"><i id="parse-progress"></i></div>
                   </article>
-                  <article class="content-card">
-                    <div><b>电池管理设计指南.pdf</b><span class="tag">高相关</span></div>
-                    <p>第 32 页 · 寿命优化与截止电压</p>
+                  <article class="task-row">
+                    <span class="file-type">XLS</span>
+                    <span><strong>电池测试报告.xlsx</strong><small>等待解析</small></span>
+                    <span class="state-label">排队中</span>
                   </article>
-                  <article class="content-card">
-                    <div><b>固件设计规范 v1.8.pdf</b><span class="tag warm">中相关</span></div>
-                    <p>第 78 页 · 充电控制逻辑说明</p>
-                  </article>
-                </section>
-              </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>来源统计</h3>
-                  <div class="mini-line static">PDF 文档 82</div>
-                  <div class="mini-line static">表格资料 21</div>
-                  <div class="mini-line static">网页备忘 25</div>
-                </section>
-                <section class="right-card">
-                  <h3>空间操作</h3>
-                  <button class="mini-line" type="button" data-view="settings">索引更新策略</button>
-                  <button class="mini-line" type="button" data-view="settings">成员与权限</button>
-                  <button class="mini-line" type="button" data-view="settings">访问 KEY</button>
-                </section>
-              </aside>
+                </div>
+              </section>
             </div>
           </section>
 
-          <section id="view-upload" class="view" aria-label="上传文档子页面">
-            <div class="screen-grid">
-              <div class="main-col">
-                <div class="toolbar-card">
-                  <div class="breadcrumb">产品问答 / 上传文档</div>
-                  <button id="start-parse" class="primary-button" type="button">开始解析</button>
-                </div>
-                <div id="upload-zone" class="upload-zone" tabindex="0">
-                  <div>
-                    <span class="upload-icon">⇧</span>
-                    <b>拖拽 PDF、Word 或表格到这里</b>
-                    <p>自动识别标题、章节、表格与图片内容</p>
+          <section id="view-answer" class="view" aria-label="回答详情">
+            <div class="page-frame answer-frame">
+              <header class="subpage-header answer-header">
+                <button class="back-button" type="button" data-view="home">
+                  <span class="back-icon" aria-hidden="true"></span><span>返回提问</span>
+                </button>
+                <div><p class="eyebrow">产品问答</p><h1 id="answer-question">电池充电截止电压是多少？</h1></div>
+                <span id="confidence-pill" class="state-label success">高可信</span>
+              </header>
+
+              <ol id="event-steps" class="trace-row" aria-label="回答过程">
+                <li><span></span><strong>准备检索</strong><small>等待回答</small></li>
+              </ol>
+
+              <div class="answer-layout">
+                <article class="answer-panel">
+                  <div class="answer-title"><span class="answer-mark" aria-hidden="true">AI</span><h2>回答</h2></div>
+                  <div id="answer-text" class="answer-copy" aria-live="polite">正在准备回答。</div>
+                  <div id="next-actions" class="action-row"></div>
+                  <form id="follow-form" class="ask-box follow-ask">
+                    <label class="sr-only" for="follow-input">继续追问</label>
+                    <textarea id="follow-input" rows="3" placeholder="继续追问"></textarea>
+                    <button class="send-button" type="submit">发送</button>
+                  </form>
+                </article>
+
+                <aside class="citation-panel" aria-labelledby="citation-title">
+                  <div class="section-heading compact-heading">
+                    <div><h2 id="citation-title">引用依据</h2><p>点击查看原文位置</p></div>
                   </div>
-                </div>
-                <article class="doc-row">
-                  <div><b>产品说明书 v2.4.pdf</b><small id="parse-status">正在 OCR 与结构化切片</small></div>
-                  <div class="progress"><i id="parse-progress"></i></div>
-                </article>
-                <article class="doc-row">
-                  <div><b>电池测试报告.xlsx</b><small>等待解析</small></div>
-                  <span class="tag">产品问答</span>
-                </article>
-                <article class="setting-row"><b>权限范围</b><span>研发部、售后组可访问</span></article>
+                  <div id="citation-list" class="citation-list"></div>
+                </aside>
               </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>解析设置</h3>
-                  <div class="mini-line static">✓ 提取表格</div>
-                  <div class="mini-line static">✓ 建立引用页码</div>
-                  <div class="mini-line static">✓ 自动生成标签</div>
-                </section>
-                <section class="right-card">
-                  <h3>数据安全</h3>
-                  <div class="mini-line static">私有索引</div>
-                  <div class="mini-line static">访问日志开启</div>
-                </section>
-              </aside>
             </div>
           </section>
 
-          <section id="view-answer" class="view" aria-label="AI 回答详情页">
-            <div class="screen-grid">
-              <div class="main-col">
-                <article class="content-card question-card">
-                  <b id="answer-question">电池充电截止电压是多少？</b>
-                  <p>来源：产品问答 · 今天 14:32</p>
+          <section id="view-preview" class="view" aria-label="原文预览">
+            <div class="page-frame preview-frame">
+              <header class="subpage-header">
+                <button id="preview-back" class="back-button" type="button">
+                  <span class="back-icon" aria-hidden="true"></span>
+                  <span id="preview-back-label">返回知识空间</span>
+                </button>
+                <div><p class="eyebrow">原文定位</p><h1 id="preview-title">产品规格书 v2.3.1</h1></div>
+                <span id="preview-location" class="location-label">第 12 页 · 3.2</span>
+              </header>
+
+              <div class="preview-layout">
+                <article class="document-page">
+                  <p class="page-number">12</p>
+                  <h2>3.2 电池与充电规格</h2>
+                  <p>设备采用单节锂电池供电。充电控制器根据电池电压和温度状态切换预充、恒流和恒压阶段。</p>
+                  <h3>关键电气参数</h3>
+                  <p id="preview-excerpt" class="evidence-highlight">充电截止电压（CV 目标电压）：4.20V（±0.05V）。</p>
+                  <p>当充电电流降至终止阈值以下并持续 10 秒，系统结束本次充电过程。</p>
                 </article>
-                <form id="follow-form" class="ask-box compact">
-                  <textarea id="follow-input" rows="2" placeholder="继续追问，例如：不同型号是否不同？"></textarea>
-                  <button class="send-button" type="submit" aria-label="发送追问">↗</button>
-                </form>
-                <div class="steps" aria-label="回答过程">
-                  <div>✓ 理解问题</div>
-                  <div>✓ 检索资料</div>
-                  <div>✓ 提取证据</div>
-                  <div>✦ 生成回答</div>
-                </div>
-                <section class="panel answer-panel">
-                  <div class="section-heading">
-                    <h2>AI 回答</h2>
-                    <span class="tag">高可信</span>
-                  </div>
-                  <h3>结论</h3>
-                  <p id="answer-text">标准充电条件下，单节锂电池充电截止电压为 <b>4.20V（±0.05V）</b>。</p>
-                  <h3>依据</h3>
-                  <p>1. 产品规格书 v2.3.1，第 12 页“电池与充电规格”。<br />2. 固件设计说明 v1.8.0，第 23 页“充电流程说明”。</p>
-                  <div class="action-row">
-                    <button class="ghost-button" type="button" data-question="不同型号截止电压是否不同？">继续追问</button>
-                    <button class="ghost-button" type="button" data-question="生成充电截止电压核对步骤">生成步骤</button>
-                    <button class="ghost-button" type="button" data-view="preview">导出资料</button>
-                  </div>
-                </section>
+
+                <aside class="source-detail">
+                  <p class="eyebrow">引用详情</p>
+                  <h2 id="preview-relevance">高相关</h2>
+                  <dl>
+                    <div><dt>来源</dt><dd id="preview-source">产品规格书 v2.3.1</dd></div>
+                    <div><dt>位置</dt><dd id="preview-meta">第 12 页 · 3.2 电池与充电规格</dd></div>
+                    <div><dt>相关度</dt><dd id="preview-score">94%</dd></div>
+                  </dl>
+                </aside>
               </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>引用来源</h3>
-                  <button class="quote" type="button" data-view="preview"><b>产品规格书 v2.3.1</b><span>4.20V（±0.05V）</span></button>
-                  <button class="quote" type="button" data-view="preview"><b>固件设计说明</b><span>CV 阶段目标电压</span></button>
-                </section>
-              </aside>
             </div>
           </section>
 
-          <section id="view-preview" class="view" aria-label="打开原文和上下文">
-            <div class="screen-grid">
-              <div class="main-col">
-                <div class="toolbar-card">
-                  <div class="breadcrumb">← 产品问答 / 产品说明书 v2.3 / 第 45 页</div>
-                  <button class="ghost-button" type="button">100% ＋</button>
-                </div>
-                <article class="pdf-page">
-                  <h2>4.2 充电管理</h2>
-                  <p><b>4.2.1 充电流程概述</b></p>
-                  <p>设备连接充电器后，充电管理模块会对输入电源进行检测。</p>
-                  <p><b>4.2.2 关键电气参数</b></p>
-                  <div class="highlight">截止充电电压（V_CV）：默认截止充电电压为 4.20V（典型值），精度 ±50mV。</div>
-                  <p>终止充电电流为 100mA，T_TERM 为 10s。</p>
-                </article>
-              </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>引用详情</h3>
-                  <span class="tag">高度相关</span>
-                  <div class="mini-line static">来源文档：产品说明书 v2.3</div>
-                  <div class="mini-line static">位置：第 45 页 · 4.2.2</div>
-                  <div class="quote static">默认截止充电电压为 <b>4.20V</b>。</div>
-                  <button class="primary-button wide" type="button" data-view="answer">返回回答</button>
-                </section>
-              </aside>
-            </div>
-          </section>
+          <section id="view-settings" class="view" aria-label="管理设置">
+            <div class="page-frame narrow-frame">
+              <header class="page-header">
+                <div><p class="eyebrow">管理设置</p><h1>权限与安全</h1><p>管理谁可以访问空间，以及知识如何被索引和审计。</p></div>
+                <button id="save-settings" class="primary-button" type="button">保存更改</button>
+              </header>
 
-          <section id="view-settings" class="view" aria-label="管理设置页">
-            <div class="screen-grid">
-              <div class="main-col">
-                <div class="toolbar-card">
-                  <div class="breadcrumb">产品问答 / 管理设置</div>
-                  <button id="save-settings" class="primary-button" type="button">保存设置</button>
+              <section class="settings-section">
+                <div class="settings-heading"><h2>访问控制</h2><p>成员和激活密钥</p></div>
+                <div class="settings-list">
+                  <div><span><strong>成员范围</strong><small>允许进入产品问答空间的组织</small></span><span>研发部、售后组、产品经理</span></div>
+                  <div><span><strong>访问密钥</strong><small>首次绑定账户时使用</small></span><span class="mono-value">KB-PROD-8F2A</span></div>
+                  <div><span><strong>引用可见性</strong><small>回答必须展示可访问来源</small></span><span class="state-label success">已开启</span></div>
                 </div>
-                <section class="panel">
-                  <h2>访问与权限</h2>
-                  <article class="setting-row"><b>访问 KEY</b><span class="accent">KB-PROD-8F2A</span></article>
-                  <article class="setting-row"><b>成员范围</b><span>研发部、售后组、产品经理</span></article>
-                  <article class="setting-row"><b>引用可见性</b><span>回答必须展示来源</span></article>
-                </section>
-                <section class="panel">
-                  <h2>索引策略</h2>
-                  <article class="setting-row"><b>自动更新</b><span>每天 02:00 增量解析</span></article>
-                  <article class="setting-row"><b>标签规则</b><span>#锂电池 #通信协议 #风险项</span></article>
-                </section>
-              </div>
-              <aside class="right-rail">
-                <section class="right-card">
-                  <h3>安全状态</h3>
-                  <div class="mini-line static">✓ 私有向量索引</div>
-                  <div class="mini-line static">✓ 操作日志 180 天</div>
-                  <div class="mini-line static">✓ 敏感词检测开启</div>
-                </section>
-                <section class="right-card">
-                  <h3>最近更新</h3>
-                  <div class="mini-line static">文档解析完成 14:32</div>
-                  <div class="mini-line static">权限变更 昨天</div>
-                </section>
-              </aside>
+              </section>
+
+              <section class="settings-section">
+                <div class="settings-heading"><h2>索引策略</h2><p>内容更新与审计</p></div>
+                <div class="settings-list">
+                  <div><span><strong>自动更新</strong><small>每天进行增量解析</small></span><span>02:00</span></div>
+                  <div><span><strong>审计日志</strong><small>保留登录、读取和回答记录</small></span><span>180 天</span></div>
+                </div>
+              </section>
             </div>
           </section>
         </main>
       </div>
     </div>
+
+    <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
+      <form id="search-form" class="search-shell">
+        <header>
+          <span class="search-icon" aria-hidden="true"></span>
+          <label class="sr-only" for="global-search">搜索文档、问题或术语</label>
+          <input id="global-search" type="search" placeholder="搜索文档、问题或术语" autocomplete="off" />
+          <button id="search-close" class="icon-button close-button" type="button" aria-label="关闭搜索">×</button>
+        </header>
+        <div class="search-results">
+          <p class="eyebrow" id="search-title">快捷搜索</p>
+          <button type="button" data-question="电池充电截止电压是多少？"><span>电池充电截止电压是多少？</span><small>最近问题</small></button>
+          <button type="button" data-question="OTA 失败如何处理？"><span>OTA 失败如何处理？</span><small>常见问题</small></button>
+          <button type="button" data-view="space"><span>浏览产品问答资料</span><small>知识空间</small></button>
+        </div>
+        <footer><span>Enter 搜索</span><span>Esc 关闭</span></footer>
+      </form>
+    </dialog>
+
     <script src="/app.js" defer></script>
   </body>
 </html>

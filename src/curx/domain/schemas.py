@@ -23,6 +23,7 @@ class AnswerEventType(StrEnum):
     retrieval_started = "retrieval.started"
     evidence_ready = "evidence.ready"
     generating = "answer.generating"
+    delta = "answer.delta"
     completed = "answer.completed"
     failed = "answer.failed"
 
@@ -71,6 +72,22 @@ class Citation(BaseModel):
 
 class AnswerRequest(BaseModel):
     question: str = Field(min_length=1, max_length=500)
+    knowledge_space_id: UUID | None = None
+
+
+class ChatRole(StrEnum):
+    system = "system"
+    user = "user"
+    assistant = "assistant"
+
+
+class ChatMessage(BaseModel):
+    role: ChatRole
+    content: str = Field(min_length=1, max_length=8000)
+
+
+class ChatAnswerRequest(BaseModel):
+    messages: list[ChatMessage] = Field(min_length=1, max_length=50)
     knowledge_space_id: UUID | None = None
 
 

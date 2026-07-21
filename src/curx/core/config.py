@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     database_url: str = "postgresql+psycopg://curx:curx@localhost:5432/curx"
     redis_url: str = "redis://localhost:6379/0"
     object_store_endpoint: str = "http://localhost:9000"
+    model_provider: str = "openai"
+    model_name: str = "gpt-4.1-mini"
+    model_api_key: str | None = None
+    model_base_url: str | None = None
+    model_temperature: float = 0.2
 
     model_config = SettingsConfigDict(
         env_file=".env",

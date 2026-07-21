@@ -1,0 +1,4 @@
+interface:
+  display_name: "Curx 问答界面迭代"
+  short_description: "延续 Curx 问答交互约束并完成真实模型流式联调验证"
+  default_prompt: "Use $iterate-curx-qa-ui to continue refining the Curx question-answering experience."
