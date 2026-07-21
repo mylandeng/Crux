@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>知识库 UX 流程画板</title>
+  <style>
+    :root {
+      --ink: #071840;
+      --muted: #73809d;
+      --line: #dfe8f7;
+      --soft: #f6f9ff;
+      --blue: #1f72ff;
+      --purple: #7357ff;
+      --green: #22b77a;
+      --orange: #ffad32;
+      --shadow: 0 18px 45px rgba(29, 74, 140, .12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 18% 8%, rgba(46, 132, 255, .12), transparent 34%),
+        radial-gradient(circle at 78% 12%, rgba(121, 84, 255, .10), transparent 32%),
+        linear-gradient(135deg, #fbfdff 0%, #eef6ff 100%);
+    }
+
+    .board {
+      width: 2400px;
+      min-height: 1500px;
+      padding: 52px 64px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .board::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0 42%, rgba(255,255,255,.52) 43%, transparent 48%),
+        linear-gradient(65deg, transparent 0 72%, rgba(52, 120, 255, .06) 73%, transparent 79%);
+      pointer-events: none;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 38px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0db8ff, #6d4cff);
+      position: relative;
+      box-shadow: 0 10px 26px rgba(48, 106, 255, .25);
+    }
+
+    .logo span {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+    }
+
+    .logo span:nth-child(1) { left: 10px; top: 12px; }
+    .logo span:nth-child(2) { right: 10px; top: 18px; }
+    .logo span:nth-child(3) { left: 16px; bottom: 10px; }
+    .logo span:nth-child(4) { right: 13px; bottom: 9px; }
+
+    .logo::before,
+    .logo::after {
+      content: "";
+      position: absolute;
+      height: 3px;
+      background: rgba(255,255,255,.85);
+      transform-origin: left center;
+      border-radius: 2px;
+    }
+
+    .logo::before { width: 34px; left: 15px; top: 20px; transform: rotate(22deg); }
+    .logo::after { width: 32px; left: 18px; top: 38px; transform: rotate(-28deg); }
+
+    .title {
+      text-align: right;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.15;
+      color: #0a1940;
+    }
+
+    .title p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 20px;
+    }
+
+    .flow {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 64px 56px;
+    }
+
+    .screen-wrap {
+      position: relative;
+    }
+
+    .caption {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .step {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 10px 20px rgba(39, 108, 255, .25);
+      font-size: 18px;
+    }
+
+    .screen {
+      width: 720px;
+      height: 520px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,.84);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 142px 1fr 178px;
+      position: relative;
+    }
+
+    .login-screen {
+      grid-template-columns: 1fr 1fr;
+      padding: 32px;
+      gap: 28px;
+    }
+
+    .side {
+      border-right: 1px solid #e7eefb;
+      padding: 22px 14px;
+      background: linear-gradient(180deg, rgba(248,251,255,.95), rgba(244,248,255,.72));
+    }
+
+    .mini-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      font-size: 17px;
+      margin-bottom: 24px;
+    }
+
+    .mini-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, #14b9ff, #6c51ff);
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 9px;
+      border-radius: 12px;
+      color: #1c2b50;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(90deg, rgba(31,114,255,.12), rgba(115,87,255,.08));
+      font-weight: 700;
+    }
+
+    .ico {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--blue);
+      background: #eef5ff;
+      font-size: 15px;
+      flex: 0 0 auto;
+    }
+
+    .side-section {
+      margin-top: 24px;
+      border-top: 1px solid #e5edf9;
+      padding-top: 16px;
+    }
+
+    .side-title {
+      display: flex;
+      justify-content: space-between;
+      color: #0e1e44;
+      font-weight: 800;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .history {
+      padding: 8px;
+      margin: 4px 0;
+      border-radius: 9px;
+      color: #53607b;
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .history.active { color: var(--blue); background: #edf5ff; }
+
+    .main {
+      padding: 22px;
+      background:
+        radial-gradient(circle at 78% 8%, rgba(35, 118, 255, .08), transparent 32%),
+        rgba(255,255,255,.5);
+      overflow: hidden;
+    }
+
+    .toolbar {
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .search {
+      height: 34px;
+      border: 1px solid #dbe6f7;
+      border-radius: 12px;
+      background: #fff;
+      color: #8a95ad;
+      padding: 8px 12px;
+      width: 72%;
+      font-size: 12px;
+      box-shadow: 0 8px 20px rgba(30,77,148,.05);
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dde9fb, #fff);
+      border: 1px solid #dbe6f7;
+      display: grid;
+      place-items: center;
+      color: #263a68;
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .hero {
+      text-align: center;
+      margin: 6px auto 18px;
+    }
+
+    .hero h2 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.2;
+      color: #081944;
+    }
+
+    .hero b {
+      color: var(--blue);
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .ask {
+      min-height: 72px;
+      border: 1.5px solid #b9cbff;
+      border-radius: 15px;
+      background: #fff;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      box-shadow: 0 14px 32px rgba(31,114,255,.10);
+      color: #8b96aa;
+      font-size: 13px;
+    }
+
+    .send {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .chip {
+      height: 38px;
+      border: 1px solid #dfe8f6;
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 8px 20px rgba(29, 74, 140, .07);
+    }
+
+    .panel {
+      background: rgba(255,255,255,.88);
+      border: 1px solid #e0e9f7;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(29, 74, 140, .08);
+      margin-top: 14px;
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .space-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .space-card {
+      min-height: 72px;
+      border: 1px solid #dfe8f6;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #fff, #f6faff);
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .right {
+      border-left: 1px solid #e7eefb;
+      padding: 22px 14px;
+      background: rgba(250,253,255,.78);
+    }
+
+    .right-card {
+      border: 1px solid #e1eaf7;
+      border-radius: 15px;
+      background: #fff;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 24px rgba(29, 74, 140, .07);
+    }
+
+    .right-card h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+
+    .mini-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 9px 0;
+      font-size: 11px;
+      color: #5e6b86;
+    }
+
+    .content-card {
+      background: #fff;
+      border: 1px solid #e1eaf7;
+      border-radius: 15px;
+      padding: 14px;
+      margin-bottom: 13px;
+      box-shadow: 0 10px 26px rgba(29, 74, 140, .07);
+    }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .metric {
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #e0e9f7;
+    }
+
+    .metric b {
+      display: block;
+      color: var(--blue);
+      font-size: 20px;
+      margin-top: 4px;
+    }
+
+    .doc-row, .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #e3ecf8;
+      border-radius: 12px;
+      margin: 10px 0;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .tag {
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: #eaf6f0;
+      color: #16885b;
+      font-weight: 800;
+      font-size: 11px;
+    }
+
+    .upload-zone {
+      height: 130px;
+      border: 2px dashed #a9c2ff;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #fff, #f3f8ff);
+      margin-bottom: 14px;
+    }
+
+    .progress {
+      width: 120px;
+      height: 7px;
+      border-radius: 999px;
+      background: #e9eef8;
+      overflow: hidden;
+    }
+
+    .progress i {
+      display: block;
+      height: 100%;
+      width: 68%;
+      background: linear-gradient(90deg, var(--blue), var(--purple));
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .steps div {
+      padding: 8px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #dfe8f6;
+      color: var(--blue);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .answer {
+      line-height: 1.7;
+      font-size: 12px;
+      color: #1d2d55;
+    }
+
+    .quote {
+      border-left: 3px solid var(--blue);
+      background: #f4f8ff;
+      padding: 10px 12px;
+      border-radius: 10px;
+      margin: 8px 0;
+    }
+
+    .pdf {
+      height: 318px;
+      background: #fff;
+      border: 1px solid #dfe8f6;
+      border-radius: 12px;
+      padding: 24px 38px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.8);
+    }
+
+    .pdf h3 {
+      margin: 0 0 16px;
+      font-size: 20px;
+    }
+
+    .pdf p {
+      margin: 10px 0;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .highlight {
+      border: 1.5px solid var(--blue);
+      background: #eef5ff;
+      border-radius: 10px;
+      padding: 10px;
+      color: #0e3f9a;
+      font-weight: 800;
+    }
+
+    .btn {
+      height: 36px;
+      padding: 0 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 11px;
+      border: 1px solid #dce7f8;
+      background: #fff;
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .btn.primary {
+      color: #fff;
+      border: none;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 10px 20px rgba(51, 102, 255, .22);
+    }
+
+    .login-copy {
+      padding: 42px 16px;
+    }
+
+    .login-copy h2 {
+      margin: 46px 0 16px;
+      font-size: 32px;
+      line-height: 1.25;
+    }
+
+    .login-copy h2 b { color: var(--blue); }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .login-card {
+      border: 1px solid #dfe8f6;
+      border-radius: 15px;
+      background: #fff;
+      padding: 16px;
+      min-height: 84px;
+      box-shadow: 0 10px 24px rgba(29, 74, 140, .08);
+    }
+
+    .login-form {
+      margin-top: 56px;
+      padding: 34px;
+      border: 1px solid #e1eaf7;
+      border-radius: 20px;
+      background: rgba(255,255,255,.92);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .field {
+      height: 44px;
+      border: 1.5px solid #bfd0ff;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      color: #8b96aa;
+      margin: 14px 0;
+      text-align: left;
+      font-size: 12px;
+    }
+
+    .arrow {
+      position: absolute;
+      width: 72px;
+      height: 26px;
+      right: -68px;
+      top: 274px;
+      color: var(--blue);
+      font-size: 34px;
+      font-weight: 800;
+      text-align: center;
+      z-index: 3;
+    }
+
+    .down {
+      right: auto;
+      left: 338px;
+      top: 590px;
+      transform: rotate(90deg);
+    }
+
+    .accent {
+      color: var(--blue);
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <header class="top">
+      <div class="brand">
+        <div class="logo"><span></span><span></span><span></span><span></span></div>
+        <div>知识库</div>
+      </div>
+      <div class="title">
+        <h1>企业知识库 UX 交互子页面</h1>
+        <p>首页、知识空间、上传解析、AI 回答、引用预览、管理设置</p>
+      </div>
+    </header>
+
+    <section class="flow">
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">1</span>知识空间首页</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">□</span><div>产品问答<br><small>常见问题与解答</small></div></div>
+            <div class="nav-item"><span class="ico">▣</span><div>固件助手<br><small>相关知识与说明</small></div></div>
+            <div class="nav-item"><span class="ico">▤</span><div>操作手册<br><small>指南与步骤</small></div></div>
+            <div class="side-section">
+              <div class="side-title">最近会话 <span class="accent">全部</span></div>
+              <div class="history active">电池充电截止电压是多少？</div>
+              <div class="history">设备休眠功耗优化方案</div>
+              <div class="history">Bootloader 升级流程</div>
+            </div>
+          </aside>
+          <section class="main">
+            <div class="toolbar"><div class="search">⌕ 搜索文档、问题或术语</div><div class="avatar">张</div></div>
+            <div class="hero"><h2>今天想<b>查什么？</b></h2></div>
+            <div class="ask"><span>请输入你的问题，例如：电池充电截止电压是多少？</span><span class="send">↗</span></div>
+            <div class="chips">
+              <div class="chip">▤ 总结文档</div><div class="chip">⌕ 查找参数</div><div class="chip">Aa 解释术语</div><div class="chip">☷ 生成步骤</div>
+            </div>
+            <div class="panel">
+              <h3>我可访问的知识空间</h3>
+              <div class="space-grid">
+                <div class="space-card"><span class="ico">□</span><b>产品问答</b></div>
+                <div class="space-card"><span class="ico">▣</span><b>固件助手</b></div>
+                <div class="space-card"><span class="ico">▤</span><b>操作手册</b></div>
+              </div>
+            </div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>本次推荐能力</h4><div class="mini-line">🔎 精准检索</div><div class="mini-line">✦ 引用溯源</div><div class="mini-line">☷ 生成步骤</div></div>
+            <div class="right-card"><h4>常见问题</h4><div class="mini-line">如何查看固件版本？</div><div class="mini-line">OTA 失败如何处理？</div><div class="mini-line">如何导出设备日志？</div></div>
+          </aside>
+        </div>
+        <div class="arrow">→</div>
+      </article>
+
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">2</span>点击“产品问答”</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">□</span><div>产品问答<br><small>128 份文档</small></div></div>
+            <div class="nav-item"><span class="ico">▣</span><div>固件文档<br><small>96 份文档</small></div></div>
+            <div class="nav-item"><span class="ico">▤</span><div>项目规范<br><small>72 份文档</small></div></div>
+            <div class="side-section">
+              <div class="side-title">标签 <span class="accent">管理</span></div>
+              <div class="history">#锂电池 #风险项</div>
+              <div class="history">#STM32 #通信协议</div>
+            </div>
+          </aside>
+          <section class="main">
+            <div class="toolbar"><div class="search">⌕ 搜索产品问答空间</div><div class="btn">+ 上传文档</div></div>
+            <div class="metric-row">
+              <div class="metric">健康度<b>86%</b></div>
+              <div class="metric">已索引<b>128</b></div>
+              <div class="metric">更新<b>14:32</b></div>
+            </div>
+            <div class="content-card"><b>产品说明书 v2.3.pdf</b><span class="tag">高相关</span><p>第 45 页 · 充电规格与关键电气参数</p></div>
+            <div class="content-card"><b>电池管理设计指南.pdf</b><span class="tag">高相关</span><p>第 32 页 · 寿命优化与截止电压</p></div>
+            <div class="content-card"><b>固件设计规范 v1.8.pdf</b><span class="tag">中相关</span><p>第 78 页 · 充电控制逻辑说明</p></div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>来源统计</h4><div class="mini-line">PDF 文档 82</div><div class="mini-line">表格资料 21</div><div class="mini-line">网页备忘 25</div></div>
+            <div class="right-card"><h4>空间操作</h4><div class="mini-line">索引更新策略</div><div class="mini-line">成员与权限</div><div class="mini-line">访问 KEY</div></div>
+          </aside>
+        </div>
+        <div class="arrow">→</div>
+      </article>
+
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">3</span>上传文档子页面</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">⇧</span><div>上传文档<br><small>解析并入库</small></div></div>
+            <div class="nav-item"><span class="ico">☷</span><div>文件队列</div></div>
+            <div class="nav-item"><span class="ico">⚙</span><div>解析规则</div></div>
+          </aside>
+          <section class="main">
+            <div class="toolbar"><div class="search">产品问答 / 上传文档</div><div class="btn primary">开始解析</div></div>
+            <div class="upload-zone"><div><div style="font-size:34px;color:#2376ff">⇧</div><b>拖拽 PDF、Word 或表格到这里</b><br><span style="color:#7a859c;font-size:12px">自动识别标题、章节、表格与图片内容</span></div></div>
+            <div class="doc-row"><div><b>产品说明书 v2.4.pdf</b><br><span>正在 OCR 与结构化切片</span></div><div class="progress"><i></i></div></div>
+            <div class="doc-row"><div><b>电池测试报告.xlsx</b><br><span>等待解析</span></div><span class="tag">产品问答</span></div>
+            <div class="setting-row"><b>权限范围</b><span>研发部、售后组可访问</span></div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>解析设置</h4><div class="mini-line">✓ 提取表格</div><div class="mini-line">✓ 建立引用页码</div><div class="mini-line">✓ 自动生成标签</div></div>
+            <div class="right-card"><h4>数据安全</h4><div class="mini-line">私有索引</div><div class="mini-line">访问日志开启</div></div>
+          </aside>
+        </div>
+        <div class="arrow down">→</div>
+      </article>
+
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">4</span>AI 回答详情页</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">□</span><div>产品问答</div></div>
+            <div class="side-section">
+              <div class="side-title">最近会话</div>
+              <div class="history active">电池充电截止电压是多少？</div>
+              <div class="history">Bootloader 升级步骤</div>
+              <div class="history">USB 通信异常处理方式</div>
+            </div>
+          </aside>
+          <section class="main">
+            <div class="content-card"><b>电池充电截止电压是多少？</b><p>来源：产品问答 · 今天 14:32</p></div>
+            <div class="ask" style="min-height:56px"><span>继续追问，例如：不同型号是否不同？</span><span class="send">↗</span></div>
+            <div class="steps"><div>✓ 理解问题</div><div>✓ 检索资料</div><div>✓ 提取证据</div><div>✦ 生成回答</div></div>
+            <div class="panel answer">
+              <h3>AI 回答</h3>
+              <b>结论</b>
+              <p>标准充电条件下，单节锂电池充电截止电压为 <span class="accent">4.20V（±0.05V）</span>。</p>
+              <b>依据</b>
+              <p>1. 产品规格书 v2.3.1，第 12 页“电池与充电规格”。<br>2. 固件设计说明 v1.8.0，第 23 页“充电流程说明”。</p>
+              <div><span class="btn">继续追问</span> <span class="btn">生成步骤</span> <span class="btn">导出资料</span></div>
+            </div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>引用来源</h4><div class="quote"><b>产品规格书 v2.3.1</b><br>4.20V（±0.05V）</div><div class="quote"><b>固件设计说明</b><br>CV 阶段目标电压</div></div>
+          </aside>
+        </div>
+        <div class="arrow">→</div>
+      </article>
+
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">5</span>打开原文 / 上下文</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">←</span><div>返回回答</div></div>
+            <div class="nav-item"><span class="ico">▤</span><div>我的标注</div></div>
+          </aside>
+          <section class="main">
+            <div class="toolbar"><div class="search">产品问答 / 产品说明书 v2.3 / 第 45 页</div><div class="btn">100% ＋</div></div>
+            <div class="pdf">
+              <h3>4.2 充电管理</h3>
+              <p><b>4.2.1 充电流程概述</b></p>
+              <p>设备连接充电器后，充电管理模块会对输入电源进行检测。</p>
+              <p><b>4.2.2 关键电气参数</b></p>
+              <div class="highlight">截止充电电压（V_CV）：默认截止充电电压为 4.20V（典型值），精度 ±50mV。</div>
+              <p>终止充电电流为 100mA，T_TERM 为 10s。</p>
+            </div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>引用详情</h4><span class="tag">高度相关</span><div class="mini-line">来源文档：产品说明书 v2.3</div><div class="mini-line">位置：第 45 页 · 4.2.2</div><div class="quote">默认截止充电电压为 <b>4.20V</b>。</div><div class="btn">返回回答</div></div>
+          </aside>
+        </div>
+        <div class="arrow">→</div>
+      </article>
+
+      <article class="screen-wrap">
+        <div class="caption"><span class="step">6</span>管理 / 设置页</div>
+        <div class="screen">
+          <aside class="side">
+            <div class="mini-brand"><span class="mini-logo"></span>知识库</div>
+            <div class="nav-item active"><span class="ico">⚙</span><div>空间设置</div></div>
+            <div class="nav-item"><span class="ico">👥</span><div>成员权限</div></div>
+            <div class="nav-item"><span class="ico">#</span><div>标签管理</div></div>
+          </aside>
+          <section class="main">
+            <div class="toolbar"><div class="search">产品问答 / 管理设置</div><div class="btn primary">保存设置</div></div>
+            <div class="panel">
+              <h3>访问与权限</h3>
+              <div class="setting-row"><b>访问 KEY</b><span class="accent">KB-PROD-8F2A</span></div>
+              <div class="setting-row"><b>成员范围</b><span>研发部、售后组、产品经理</span></div>
+              <div class="setting-row"><b>引用可见性</b><span>回答必须展示来源</span></div>
+            </div>
+            <div class="panel">
+              <h3>索引策略</h3>
+              <div class="setting-row"><b>自动更新</b><span>每天 02:00 增量解析</span></div>
+              <div class="setting-row"><b>标签规则</b><span>#锂电池 #通信协议 #风险项</span></div>
+            </div>
+          </section>
+          <aside class="right">
+            <div class="right-card"><h4>安全状态</h4><div class="mini-line">✓ 私有向量索引</div><div class="mini-line">✓ 操作日志 180 天</div><div class="mini-line">✓ 敏感词检测开启</div></div>
+            <div class="right-card"><h4>最近更新</h4><div class="mini-line">文档解析完成 14:32</div><div class="mini-line">权限变更 昨天</div></div>
+          </aside>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
