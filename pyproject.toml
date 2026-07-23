@@ -20,17 +20,23 @@ dependencies = [
     "langgraph>=1.2.9",
     "langsmith>=0.10.5",
     "markdown>=3.10.2",
+    "minio>=7.2.20",
     "pgvector>=0.3.6",
     "psycopg[binary]>=3.3.4",
     "pydantic-settings>=2.14.2",
     "pymupdf>=1.24",
     "python-docx>=1.2.0",
+    "python-multipart>=0.0.32",
     "rank-bm25>=0.2.2",
     "redis>=5.3.1",
     "sqlalchemy>=2.0.51",
     "tiktoken>=0.13.0",
     "uvicorn[standard]>=0.51.0",
 ]
+
+[project.scripts]
+curx = "curx.__main__:main"
+curx-worker = "curx.workers.__main__:main"
 
 [dependency-groups]
 dev = [

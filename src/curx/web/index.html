@@ -4,10 +4,52 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Curx 知识库</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <div class="app-shell">
+    <section id="auth-gate" class="auth-gate" aria-labelledby="auth-title">
+      <div class="auth-layout">
+        <header class="auth-brand">
+          <span class="brand-mark" aria-hidden="true">C</span>
+          <span><strong>Curx</strong><small>证据知识库</small></span>
+        </header>
+        <div class="auth-copy">
+          <p class="eyebrow">内部知识工作台</p>
+          <h1 id="auth-title">绑定身份后进入 Curx</h1>
+          <p>使用管理员分配的用户名和 Curx 激活密钥建立安全会话。</p>
+        </div>
+        <form id="auth-form" class="auth-form">
+          <label for="auth-username">
+            <span>用户名</span>
+            <input
+              id="auth-username"
+              name="username"
+              type="text"
+              autocomplete="username"
+              maxlength="80"
+              required
+            />
+          </label>
+          <label for="auth-key">
+            <span>Curx 激活密钥</span>
+            <input
+              id="auth-key"
+              name="access_key"
+              type="password"
+              autocomplete="current-password"
+              maxlength="256"
+              required
+            />
+          </label>
+          <p id="auth-error" class="form-message error-message" role="alert" aria-live="polite"></p>
+          <button id="auth-submit" class="primary-button auth-submit" type="submit">进入 Curx</button>
+        </form>
+        <p class="auth-footnote">密钥只用于登录，不会保存在浏览器页面中。</p>
+      </div>
+    </section>
+
+    <div id="app-shell" class="app-shell" hidden>
       <header class="topbar">
         <a class="brand" href="/" aria-label="Curx 首页">
           <span class="brand-mark" aria-hidden="true">C</span>
@@ -26,7 +68,16 @@
           <button id="search-trigger" class="icon-button" type="button" aria-label="搜索">
             <span class="search-icon" aria-hidden="true"></span>
           </button>
-          <button class="avatar-button" type="button" aria-label="个人中心">张</button>
+          <div class="user-menu">
+            <button id="user-menu-trigger" class="avatar-button" type="button" aria-label="个人中心" aria-expanded="false">
+              <span id="user-avatar">U</span>
+            </button>
+            <div id="user-menu-popover" class="user-menu-popover" hidden>
+              <strong id="user-menu-name">当前用户</strong>
+              <span id="user-menu-role">成员</span>
+              <button id="logout-button" class="text-button" type="button">退出登录</button>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -109,17 +160,17 @@
               <header class="page-header">
                 <div>
                   <p class="eyebrow">知识空间</p>
-                  <h1>产品问答</h1>
+                  <h1 id="space-title">默认知识空间</h1>
                   <p>维护可检索资料，查看索引状态与来源质量。</p>
                 </div>
-                <button class="primary-button" type="button" data-view="upload">上传文档</button>
+                <button class="primary-button" type="button" data-view="upload" data-write-only>上传资料</button>
               </header>
 
               <div class="metric-strip" aria-label="知识空间状态">
-                <div><span>索引健康度</span><strong id="space-health">86%</strong><small>运行正常</small></div>
-                <div><span>已索引文档</span><strong id="space-doc-count">128</strong><small>3 类来源</small></div>
-                <div><span>失败任务</span><strong>0</strong><small>过去 7 天</small></div>
-                <div><span>最近更新</span><strong>14:32</strong><small>今天</small></div>
+                <div><span>索引健康度</span><strong id="space-health">0%</strong><small id="space-health-note">等待资料</small></div>
+                <div><span>已索引文档</span><strong id="space-doc-count">0</strong><small id="source-type-summary">暂无来源</small></div>
+                <div><span>失败任务</span><strong id="failed-job-count">0</strong><small>最近 50 个任务</small></div>
+                <div><span>最近更新</span><strong id="space-updated-time">--</strong><small id="space-updated-date">暂无记录</small></div>
               </div>
 
               <section class="content-section">
@@ -127,25 +178,8 @@
                   <div><h2>资料库</h2><p>打开文档可查看原文和索引位置。</p></div>
                   <button class="text-button" type="button" data-view="upload">查看解析任务</button>
                 </div>
-                <div id="document-list" class="document-list">
-                  <button class="document-row" type="button" data-preview-from="space">
-                    <span class="file-type">PDF</span>
-                    <span><strong>产品规格书 v2.3.1</strong><small>第 12 页 · 电池与充电规格</small></span>
-                    <span class="document-meta"><span class="state-label success">已索引</span><small>今天 14:32</small></span>
-                    <span class="row-arrow" aria-hidden="true">→</span>
-                  </button>
-                  <button class="document-row" type="button" data-preview-from="space">
-                    <span class="file-type">PDF</span>
-                    <span><strong>电池充电管理设计指南</strong><small>第 23 页 · 充电流程说明</small></span>
-                    <span class="document-meta"><span class="state-label success">已索引</span><small>昨天 18:05</small></span>
-                    <span class="row-arrow" aria-hidden="true">→</span>
-                  </button>
-                  <button class="document-row" type="button" data-preview-from="space">
-                    <span class="file-type">PDF</span>
-                    <span><strong>固件设计说明 v1.8.0</strong><small>第 78 页 · 充电控制逻辑</small></span>
-                    <span class="document-meta"><span class="state-label success">已索引</span><small>07-18 09:40</small></span>
-                    <span class="row-arrow" aria-hidden="true">→</span>
-                  </button>
+                <div id="document-list" class="document-list" aria-live="polite">
+                  <p class="empty-state">正在加载知识来源。</p>
                 </div>
               </section>
             </div>
@@ -158,28 +192,57 @@
                   <span class="back-icon" aria-hidden="true"></span><span>返回知识空间</span>
                 </button>
                 <div><p class="eyebrow">知识空间 / 上传</p><h1>上传与解析</h1></div>
-                <button id="start-parse" class="primary-button" type="button">开始解析</button>
+                <button id="refresh-ingestion" class="icon-button" type="button" aria-label="刷新入库状态" title="刷新入库状态">↻</button>
               </header>
 
-              <div id="upload-zone" class="upload-zone" tabindex="0" role="button" aria-label="选择或拖入文件">
-                <span class="upload-mark" aria-hidden="true">↑</span>
-                <strong>选择文件或拖到这里</strong>
-                <p>支持 PDF、Word 和表格，上传后进入解析与索引队列。</p>
+              <div class="source-mode-tabs" role="tablist" aria-label="资料类型" data-write-only>
+                <button class="active" type="button" role="tab" aria-selected="true" data-source-mode="file">文件</button>
+                <button type="button" role="tab" aria-selected="false" data-source-mode="text">Markdown / HTML</button>
+                <button type="button" role="tab" aria-selected="false" data-source-mode="faq">手工 FAQ</button>
               </div>
+
+              <form id="file-source-form" class="source-form" data-source-panel="file" data-write-only>
+                <input id="source-file" class="sr-only" type="file" accept=".md,.markdown,.html,.htm,.pdf,.docx,text/markdown,text/html,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <label id="upload-zone" class="upload-zone" for="source-file">
+                  <span class="upload-mark" aria-hidden="true">↑</span>
+                  <strong>选择文件或拖到这里</strong>
+                  <p>支持 Markdown、HTML、PDF 和 DOCX，单文件不超过 25 MB。</p>
+                  <small id="selected-file-name">尚未选择文件</small>
+                </label>
+                <div class="form-grid">
+                  <label><span>资料标题</span><input id="file-source-title" type="text" maxlength="240" placeholder="默认使用文件名" /></label>
+                  <label><span>标签</span><input id="file-source-tags" type="text" maxlength="300" placeholder="多个标签用逗号分隔" /></label>
+                </div>
+                <p id="file-source-error" class="form-error" role="alert"></p>
+                <div class="form-actions"><button class="primary-button" type="submit">上传并开始索引</button></div>
+              </form>
+
+              <form id="text-source-form" class="source-form" data-source-panel="text" hidden data-write-only>
+                <div class="form-grid">
+                  <label><span>资料标题</span><input id="text-source-title" type="text" maxlength="240" required /></label>
+                  <label><span>内容格式</span><select id="text-source-type"><option value="markdown">Markdown</option><option value="html">HTML</option></select></label>
+                </div>
+                <label><span>正文</span><textarea id="text-source-content" rows="12" required placeholder="# 标题&#10;&#10;输入要纳入知识库的正文"></textarea></label>
+                <label><span>标签</span><input id="text-source-tags" type="text" maxlength="300" placeholder="多个标签用逗号分隔" /></label>
+                <p id="text-source-error" class="form-error" role="alert"></p>
+                <div class="form-actions"><button class="primary-button" type="submit">提交并开始索引</button></div>
+              </form>
+
+              <form id="faq-source-form" class="source-form" data-source-panel="faq" hidden data-write-only>
+                <label><span>FAQ 集合名称</span><input id="faq-source-title" type="text" maxlength="240" required /></label>
+                <label><span>问题</span><textarea id="faq-question" rows="3" required></textarea></label>
+                <label><span>答案</span><textarea id="faq-answer" rows="7" required></textarea></label>
+                <label><span>标签</span><input id="faq-source-tags" type="text" maxlength="300" placeholder="多个标签用逗号分隔" /></label>
+                <p id="faq-source-error" class="form-error" role="alert"></p>
+                <div class="form-actions"><button class="primary-button" type="submit">创建 FAQ 来源</button></div>
+              </form>
+
+              <p id="read-only-upload-note" class="member-settings-note" hidden>当前账号只有读取权限，不能上传或重新索引资料。</p>
 
               <section class="content-section">
                 <div class="section-heading"><div><h2>解析队列</h2><p>查看文档进入知识空间前的处理状态。</p></div></div>
-                <div class="task-list">
-                  <article class="task-row">
-                    <span class="file-type">PDF</span>
-                    <span><strong>产品说明书 v2.4.pdf</strong><small id="parse-status">正在提取文本并建立结构</small></span>
-                    <div class="progress" aria-label="解析进度"><i id="parse-progress"></i></div>
-                  </article>
-                  <article class="task-row">
-                    <span class="file-type">XLS</span>
-                    <span><strong>电池测试报告.xlsx</strong><small>等待解析</small></span>
-                    <span class="state-label">排队中</span>
-                  </article>
+                <div id="ingestion-task-list" class="task-list" aria-live="polite">
+                  <p class="empty-state">正在加载入库任务。</p>
                 </div>
               </section>
             </div>
@@ -202,7 +265,7 @@
               <div class="answer-layout">
                 <article class="answer-panel">
                   <div class="answer-title"><span class="answer-mark" aria-hidden="true">AI</span><h2>回答</h2></div>
-                  <div id="answer-text" class="answer-copy" aria-live="polite">正在准备回答。</div>
+                  <div id="answer-thread" class="answer-thread" aria-live="polite"></div>
                   <div id="next-actions" class="action-row"></div>
                   <form id="follow-form" class="ask-box follow-ask">
                     <label class="sr-only" for="follow-input">继续追问</label>
@@ -259,23 +322,78 @@
             <div class="page-frame narrow-frame">
               <header class="page-header">
                 <div><p class="eyebrow">管理设置</p><h1>权限与安全</h1><p>管理谁可以访问空间，以及知识如何被索引和审计。</p></div>
-                <button id="save-settings" class="primary-button" type="button">保存更改</button>
+                <button id="refresh-access-keys" class="text-button" type="button" data-admin-only>刷新密钥</button>
               </header>
 
               <section class="settings-section">
-                <div class="settings-heading"><h2>访问控制</h2><p>成员和激活密钥</p></div>
+                <div class="settings-heading"><h2>当前身份</h2><p>会话与授权范围</p></div>
                 <div class="settings-list">
-                  <div><span><strong>成员范围</strong><small>允许进入产品问答空间的组织</small></span><span>研发部、售后组、产品经理</span></div>
-                  <div><span><strong>访问密钥</strong><small>首次绑定账户时使用</small></span><span class="mono-value">KB-PROD-8F2A</span></div>
+                  <div><span><strong>登录用户</strong><small>当前浏览器会话绑定身份</small></span><span id="settings-user-name">-</span></div>
+                  <div><span><strong>角色</strong><small>服务端强制校验权限</small></span><span id="settings-user-role" class="state-label">-</span></div>
                   <div><span><strong>引用可见性</strong><small>回答必须展示可访问来源</small></span><span class="state-label success">已开启</span></div>
                 </div>
               </section>
 
+              <section id="access-key-admin" class="settings-section" data-admin-only>
+                <div class="settings-heading"><h2>激活密钥</h2><p>创建、绑定与撤销</p></div>
+                <div class="settings-content">
+                  <form id="access-key-form" class="key-form">
+                    <div class="key-form-grid">
+                      <label>
+                        <span>用途名称</span>
+                        <input id="key-label" type="text" maxlength="120" placeholder="例如：售后组成员" required />
+                      </label>
+                      <label>
+                        <span>授权角色</span>
+                        <select id="key-role">
+                          <option value="member">普通成员</option>
+                          <option value="operator">知识运营</option>
+                        </select>
+                      </label>
+                      <label>
+                        <span>有效期至</span>
+                        <input id="key-expiry" type="date" required />
+                      </label>
+                      <label>
+                        <span>知识范围</span>
+                        <select id="key-scope">
+                          <option value="current">当前知识空间</option>
+                          <option value="all">全部知识空间</option>
+                        </select>
+                      </label>
+                    </div>
+                    <p id="key-form-error" class="form-message error-message" role="alert" aria-live="polite"></p>
+                    <button id="create-access-key" class="primary-button" type="submit">创建激活密钥</button>
+                  </form>
+
+                  <div id="created-key-reveal" class="created-key-reveal" hidden>
+                    <div>
+                      <strong>请立即保存，关闭后不再展示</strong>
+                      <code id="created-key-value"></code>
+                    </div>
+                    <button id="copy-created-key" class="text-button" type="button">复制</button>
+                  </div>
+
+                  <div class="key-list-heading">
+                    <strong>已创建密钥</strong>
+                    <span id="access-key-count">0 条</span>
+                  </div>
+                  <div id="access-key-list" class="key-list" aria-live="polite"></div>
+                </div>
+              </section>
+
+              <section id="member-settings-note" class="settings-section" hidden>
+                <div class="settings-heading"><h2>访问管理</h2><p>管理员能力</p></div>
+                <div class="settings-content compact-content">
+                  <p>当前账号可以使用已授权知识空间。激活密钥和成员权限由管理员维护。</p>
+                </div>
+              </section>
+
               <section class="settings-section">
-                <div class="settings-heading"><h2>索引策略</h2><p>内容更新与审计</p></div>
+                <div class="settings-heading"><h2>审计状态</h2><p>安全事件记录</p></div>
                 <div class="settings-list">
-                  <div><span><strong>自动更新</strong><small>每天进行增量解析</small></span><span>02:00</span></div>
-                  <div><span><strong>审计日志</strong><small>保留登录、读取和回答记录</small></span><span>180 天</span></div>
+                  <div><span><strong>身份操作</strong><small>登录失败、绑定、撤销和越权访问</small></span><span class="state-label success">服务端记录</span></div>
+                  <div><span><strong>会话失效</strong><small>密钥撤销或过期后立即拒绝请求</small></span><span class="state-label success">已开启</span></div>
                 </div>
               </section>
             </div>
@@ -283,6 +401,37 @@
         </main>
       </div>
     </div>
+
+    <dialog id="source-detail-dialog" class="source-dialog" aria-labelledby="source-detail-title">
+      <section>
+        <header>
+          <div>
+            <p class="eyebrow">知识来源</p>
+            <h2 id="source-detail-title">来源详情</h2>
+          </div>
+          <button id="source-detail-close" class="icon-button close-button" type="button" aria-label="关闭来源详情">×</button>
+        </header>
+        <dl class="source-facts">
+          <div><dt>格式</dt><dd id="source-detail-type">--</dd></div>
+          <div><dt>状态</dt><dd id="source-detail-status">--</dd></div>
+          <div><dt>当前版本</dt><dd id="source-detail-version">--</dd></div>
+          <div><dt>内容哈希</dt><dd id="source-detail-hash">--</dd></div>
+        </dl>
+        <div class="source-dialog-section">
+          <h3>文档版本</h3>
+          <div id="source-version-list" class="version-list"></div>
+        </div>
+        <div class="source-dialog-section">
+          <h3>最近任务轨迹</h3>
+          <ol id="source-event-list" class="source-event-list"></ol>
+        </div>
+        <p id="source-detail-error" class="form-error" role="alert"></p>
+        <footer>
+          <button id="source-reindex" class="secondary-button" type="button" data-write-only>重新索引</button>
+          <button class="primary-button" type="button" data-close-source-dialog>完成</button>
+        </footer>
+      </section>
+    </dialog>
 
     <dialog id="search-dialog" class="search-dialog" aria-labelledby="search-title">
       <form id="search-form" class="search-shell">

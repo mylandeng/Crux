@@ -51,7 +51,7 @@ def test_chat_answer_sends_conversation_messages_to_configured_model(monkeypatch
         return fake_model
 
     monkeypatch.setattr("curx.services.chat_llm.build_chat_model", fake_build_chat_model)
-    client = TestClient(create_app())
+    client = TestClient(create_app(Settings(auth_required=False, _env_file=None)))
 
     response = client.post(
         "/api/chat/answer",
@@ -79,7 +79,7 @@ def test_chat_stream_returns_sse_delta_and_completion(monkeypatch) -> None:
         return fake_model
 
     monkeypatch.setattr("curx.services.chat_llm.build_chat_model", fake_build_chat_model)
-    client = TestClient(create_app())
+    client = TestClient(create_app(Settings(auth_required=False, _env_file=None)))
 
     with client.stream(
         "POST",

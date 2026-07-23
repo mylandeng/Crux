@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
+from curx.api.deps import ChatIdentity
 from curx.core.config import Settings, get_settings
 from curx.domain.schemas import AnswerResponse, ChatAnswerRequest
 from curx.services.chat_llm import answer_chat, stream_chat
@@ -14,6 +15,7 @@ router = APIRouter(prefix="/chat", tags=["chat"])
 async def answer(
     payload: ChatAnswerRequest,
     settings: Annotated[Settings, Depends(get_settings)],
+    _identity: ChatIdentity,
 ) -> AnswerResponse:
     return await answer_chat(payload, settings)
 
@@ -22,6 +24,7 @@ async def answer(
 async def stream(
     payload: ChatAnswerRequest,
     settings: Annotated[Settings, Depends(get_settings)],
+    _identity: ChatIdentity,
 ) -> StreamingResponse:
     return StreamingResponse(
         stream_chat(payload, settings),

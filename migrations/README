@@ -1,0 +1,9 @@
+Curx database migrations.
+
+Create a revision after changing SQLAlchemy models:
+
+    uv run alembic revision --autogenerate -m "describe change"
+
+Apply all migrations:
+
+    uv run alembic upgrade head
